@@ -28,11 +28,12 @@ func TestGetAPIKey(t * testing.T) {
 		t.Fatalf("expected: %v, got: %v, err: %v", want, got, err)
 	}
 
+	// Act
 	for _, tc := range testCases[1:] {
 		got, err := GetAPIKey(tc)
 		want := ""
 		// Assert
-		if (!reflect.DeepEqual(want, got)) {
+		if (reflect.DeepEqual(want, got)) {
 			t.Errorf("expected: %v, got: %v, err: %v", want, got, err)
 		}
 	}
