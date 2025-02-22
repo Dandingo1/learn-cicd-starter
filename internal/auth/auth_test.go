@@ -1,41 +1,54 @@
 package auth
 
 import (
+	"net/http"
 	"reflect"
 	"testing"
 )
 
-// Happy Path
 func TestGetAPIKey(t * testing.T) {
 	// Arrange
-	testCases := []map[string][]string {
+	testCases := []struct { 
+		key 		string
+		value 		string
+		expect 		string
+		expectedErr string
+	}{
 		{
-			"Authorization": {"ApiKey some_token"},
+			key: "Authorization",
+			value: "ApiKey xxxxxxxx",
+			expect: "xxxxxxxx",
+			expectedErr: "",
 		},
 		{
-			"Authorization": {""},
+			key: "Authorization",
+			value: "",
+			expect: "",
+			expectedErr: "no authorization header",
 		},
 		{
-			"Authorization": {"Bearer some_token_bearer"},
+			key: "Authorization",
+			value: "Bearer some_token_bearer",
+			expect: "",
+			expectedErr: "malformed authorization header",
 		},	
 	}
 
 	// Act
-	got, err := GetAPIKey(testCases[0])
-	want := "some_token"
-	// Assert
-	if (!reflect.DeepEqual(want, got)) {
-		t.Fatalf("expected: %v, got: %v, err: %v", want, got, err)
-	}
+	for _, test := range testCases[:] {
+		header := http.Header{}
+		header.Add(test.key, test.value)
 
-	// Act
-	for _, tc := range testCases[1:] {
-		got, err := GetAPIKey(tc)
-		want := ""
+		output, err := GetAPIKey(header)
+		expect := test.expect
+
 		// Assert
-		if (reflect.DeepEqual(want, got)) {
-			t.Errorf("expected: %v, got: %v, err: %v", want, got, err)
+		if (!reflect.DeepEqual(expect, output)) {
+			t.Errorf("expected value: %v, Output value: %v", expect, output)
 		}
-	}
-	
+
+		if (reflect.DeepEqual(test.expectedErr, err)) {
+			t.Errorf("Expected error: %v, Output error: %v", test.expectedErr, err )
+		}
+	}	
 }
