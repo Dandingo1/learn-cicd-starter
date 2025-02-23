@@ -15,9 +15,9 @@ func TestGetAPIKey(t *testing.T) {
 		expectedErr string
 	}{
 		{
-			key:         "Authorization",
-			value:       "ApiKey xxxxxxxx",
-			expect:      "xxxxxxxx",
+			key:    "Authorization",
+			value:  "ApiKey xxxxxxxx",
+			expect: "xxxxxxxx",
 		},
 		{
 			key:         "Authorization",
