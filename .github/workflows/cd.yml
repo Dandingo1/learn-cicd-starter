@@ -7,6 +7,9 @@ on:
 jobs:
     deploy:
         name: Deploy
+        permissions:
+          contents: 'read'
+          id-token: 'write'
         runs-on: ubuntu-latest
 
         steps:
@@ -21,13 +24,6 @@ jobs:
             - name: Build web app
               run: ./scripts/buildprod.sh
 
-    job_id:
-        permissions:
-          contents: 'read'
-          id-token: 'write'
-        runs-on: ubuntu-latest
-
-        steps:
             - id: 'auth'
               uses: 'google-github-actions/auth@v2'
               with:
